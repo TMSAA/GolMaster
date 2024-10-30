@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "438398517736",
+    "firebase_url": "https://prueba1-142c7-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "prueba1-142c7",
+    "storage_bucket": "prueba1-142c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438398517736:android:b336488796b0a90521645d",
+        "android_client_info": {
+          "package_name": "com.example.golmaster"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIXELW3qt9H-x5XVJhPkH6ED9MHD2bnFE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
