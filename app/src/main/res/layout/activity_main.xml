@@ -55,10 +55,11 @@
 
         <ImageButton
             android:id="@+id/button_arrow_back"
-            android:layout_width="39dp"
-            android:layout_height="28dp"
-            android:src="@drawable/arrow_back_24_white"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Boton para salir"
+            android:src="@drawable/arrow_back_24_white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.015"
