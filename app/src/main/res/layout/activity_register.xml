@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#272527"
+    android:background="#4B4B4B"
     tools:context=".Register">
 
     <LinearLayout
@@ -89,14 +89,16 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/miImagenView"
+        android:layout_width="277dp"
+        android:layout_height="179dp"
+        android:src="@drawable/golmasterlogo"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.56" />
 
     <Button
         android:id="@+id/buttonRegistrar"
@@ -109,5 +111,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         app:layout_constraintVertical_bias="0.327"
-        android:textColor="#272527"/>
+        android:textColor="#E5E5E5"
+        android:backgroundTint="#76C567"/>
+
+    <ImageButton
+        android:id="@+id/button_arrow_back"
+        android:layout_width="50dp"
+        android:layout_height="52dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Boton para salir"
+        android:src="@drawable/arrow_back_24_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.019"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
