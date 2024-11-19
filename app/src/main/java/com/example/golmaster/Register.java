@@ -4,10 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -19,19 +17,19 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class Register extends AppCompatActivity {
 
     private EditText editTextNombre, editTextApellidos, editTextEmail, editTextPassword, editTextConfirmPassword;
-    private Button buttonRegistrar;
-    private ImageButton buttonAtras;
     private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        Button buttonRegistrar;
+        ImageButton buttonAtras;
 
         db = FirebaseFirestore.getInstance();
 
@@ -72,7 +70,7 @@ public class Register extends AppCompatActivity {
                            QuerySnapshot querySnapshot = task.getResult();
                            if (querySnapshot.isEmpty()){
                                //usuario no existe
-                               String hashpasword = "";
+                               String hashpasword;
                                hashpasword = hashPassword(password);
                                regitrarUsuario(nombre,apellidos,email,hashpasword);
                            }else {
@@ -83,14 +81,10 @@ public class Register extends AppCompatActivity {
                     });
         });
 
-        buttonAtras.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Register.this, Launcher.class);
-                startActivity(intent);
-                finish();
-            }
+        buttonAtras.setOnClickListener(v -> {
+            Intent intent = new Intent(Register.this, Launcher.class);
+            startActivity(intent);
+            finish();
         });
     }
 
@@ -103,10 +97,15 @@ public class Register extends AppCompatActivity {
         user.put("Contraseña", password);
 
         db.collection("Usuario").add(user)
-                .addOnSuccessListener( documentReference ->
-                        Toast.makeText(this, "Usuario registrado Correctamente", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, Launcher.class);
+                    startActivity(intent);
+                    finish();
+                })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this,"Error al regitrar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        Toast.makeText(this, "Error al registrar: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 
     private String hashPassword(String password){
