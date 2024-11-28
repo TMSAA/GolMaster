@@ -70,8 +70,6 @@ public class Login extends AppCompatActivity {
 
                                 // Hashea la contraseña ingresada para compararla
                                 String inputPasswordHash = hashPassword(password);
-                                Log.d("LoginDebug","Contraseña base de datos "+storedPasswordHash);
-                                Log.d("LoginDebug","Contraseña input "+inputPasswordHash);
                                 if (inputPasswordHash.equals(storedPasswordHash)) {
                                     // Contraseña válida, inicio de sesión exitoso
                                     Toast.makeText(Login.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
