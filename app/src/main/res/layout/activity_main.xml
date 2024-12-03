@@ -1,111 +1,106 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3A3434"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:background="#4B4B4B">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="412dp"
-        android:layout_height="202dp"
-        android:background="#272527"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <ImageView
-            android:id="@+id/escudoUno"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="60dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/Guion"
-            android:layout_width="37dp"
-            android:layout_height="108dp"
-            android:gravity="center"
-            android:text="-"
-            android:textColor="#000000"
-            android:textSize="100sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/escudoDos"
-            app:layout_constraintStart_toEndOf="@+id/escudoUno"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.392" />
-
-        <ImageView
-            android:id="@+id/escudoDos"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginEnd="60dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1B1B1B">
 
         <ImageButton
             android:id="@+id/button_arrow_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Boton para salir"
-            android:src="@drawable/arrow_back_24_white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.015"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.032" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:src="@drawable/arrow_back_24_white" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="360dp"
-        android:layout_height="486dp"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintVertical_bias="0.166" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
+            <!-- Fecha debajo del resultado -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:id="@+id/ivEscudoLocal"
+                    android:layout_width="0dp"
+                    android:layout_height="170dp"
+                    android:layout_weight="1"
+                    android:contentDescription="Escudo del equipo local"
+                    android:scaleType="centerInside" />
+
+                <TextView
+                    android:id="@+id/tvResultado"
+                    android:layout_width="0dp"
+                    android:layout_height="43dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="2 - 1"
+                    android:textColor="@color/white"
+                    android:textSize="38sp"
+                    android:textStyle="bold" />
+
+                <!-- Escudo equipo visitante -->
+                <ImageView
+                    android:id="@+id/ivEscudoVisitante"
+                    android:layout_width="0dp"
+                    android:layout_height="170dp"
+                    android:layout_weight="1"
+                    android:contentDescription="Escudo del equipo visitante"
+                    android:scaleType="centerInside" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvFechaHora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Fecha y hora"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Sección inferior para otros detalles -->
     <LinearLayout
-        android:layout_width="322dp"
-        android:layout_height="39dp"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
-        app:layout_constraintEnd_toEndOf="@+id/recyclerView"
-        app:layout_constraintStart_toStartOf="@+id/recyclerView"
-        app:layout_constraintTop_toTopOf="@+id/recyclerView"
-        app:layout_constraintVertical_bias="0.507"
-        tools:ignore="MissingConstraints">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:gravity="center">
+        <!-- Otros detalles aquí -->
 
         <TextView
-            android:id="@+id/evento_minuto"
+            android:id="@+id/rvEventosPartido"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Minuto"
-            android:textStyle="bold" />
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:textSize="20dp"
+            android:text="Eventos Partido"
+            android:textColor="@color/white"/>
 
-        <TextView
-            android:id="@+id/evento_descripcion"
-            android:layout_width="241dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Descripción del evento" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvEventos"
+            android:layout_width="411dp"
+            android:layout_height="433dp"
+            android:scrollbars="vertical" />
     </LinearLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -1,17 +1,20 @@
 package com.example.golmaster;
 
-import android.util.Log;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
+import android.util.Log;
 
 public class Repositorio {
 
@@ -21,13 +24,12 @@ public class Repositorio {
         this.firestore = FirebaseFirestore.getInstance();
     }
 
-    public void cargarJornada(int jornadaId, Callback<List<Partido>> callback) {
+    public void cargarJornada(int jornadaId, Callback<List<ElementoLista>> callback) {
         firestore.collection("Jornadas").whereEqualTo("Id", jornadaId).get()
                 .addOnSuccessListener(querySnapshot -> {
                     if (!querySnapshot.isEmpty()) {
                         Jornada jornada = querySnapshot.getDocuments().get(0).toObject(Jornada.class);
                         if (jornada != null) {
-                            // Filtrar partidos por el Id de Jornada
                             cargarPartidosConEquiposPorJornada(jornadaId, callback);
                         } else {
                             callback.onFailure(new Exception("Jornada no encontrada o datos inválidos."));
@@ -39,7 +41,7 @@ public class Repositorio {
                 .addOnFailureListener(e -> callback.onFailure(e));
     }
 
-    public void cargarPartidosConEquiposPorJornada(int idJornada, Callback<List<Partido>> callback) {
+    public void cargarPartidosConEquiposPorJornada(int idJornada, Callback<List<ElementoLista>> callback) {
         firestore.collection("Partidos").whereEqualTo("IdJornada", idJornada).get()
                 .addOnSuccessListener(querySnapshot -> {
                     if (!querySnapshot.isEmpty()) {
@@ -48,76 +50,78 @@ public class Repositorio {
 
                         for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                             Partido partido = document.toObject(Partido.class);
+                            Log.d("Repositorio", "Documento Firebase: " + document.getData());
                             if (partido != null) {
-                                // Crear una tarea para manejar las consultas de equipo
                                 TaskCompletionSource<Void> tarea = new TaskCompletionSource<>();
                                 tareas.add(tarea.getTask());
 
-                                // Obtener equipo local y visitante en paralelo
                                 firestore.collection("Equipos").whereEqualTo("Id", partido.getEquipoLocal()).get()
                                         .addOnSuccessListener(localSnapshot -> {
                                             if (!localSnapshot.isEmpty()) {
-                                                // Obtener el equipo local
                                                 Equipo equipoLocal = localSnapshot.getDocuments().get(0).toObject(Equipo.class);
                                                 partido.setNombreEquipoLocal(equipoLocal.getNombre());
+                                                partido.setRutaEscudoLocal(equipoLocal.getRutaEscudo());
                                             }
 
-                                            // Consultar el equipo visitante
                                             firestore.collection("Equipos").whereEqualTo("Id", partido.getEquipoVisitante()).get()
                                                     .addOnSuccessListener(visitanteSnapshot -> {
                                                         if (!visitanteSnapshot.isEmpty()) {
-                                                            // Obtener el equipo visitante
                                                             Equipo equipoVisitante = visitanteSnapshot.getDocuments().get(0).toObject(Equipo.class);
                                                             partido.setNombreEquipoVisitante(equipoVisitante.getNombre());
+                                                            partido.setRutaEscudoVisitante(equipoVisitante.getRutaEscudo());
                                                         }
-                                                        // Agregar partido completo a la lista
                                                         partidos.add(partido);
-                                                        tarea.setResult(null); // Marca la tarea como completada
+                                                        tarea.setResult(null);
                                                     })
-                                                    .addOnFailureListener(tarea::setException); // Error en equipo visitante
+                                                    .addOnFailureListener(tarea::setException);
                                         })
-                                        .addOnFailureListener(tarea::setException); // Error en equipo local
+                                        .addOnFailureListener(tarea::setException);
                             }
                         }
 
-                        // Esperar a que todas las tareas de consultas se completen
                         Tasks.whenAllComplete(tareas).addOnSuccessListener(aVoid -> {
-                            // Ordenar partidos por fecha antes de retornar
-                            Collections.sort(partidos, new Comparator<Partido>() {
-                                @Override
-                                public int compare(Partido p1, Partido p2) {
-                                    if (p1.getHorario() == null || p2.getHorario() == null) {
-                                        return 0; // Evitar errores con fechas nulas
-                                    }
-                                    return p1.getHorario().toDate().compareTo(p2.getHorario().toDate());
-                                }
-                            });
-
-                            callback.onSuccess(partidos); // Retornar los partidos con los nombres de los equipos
+                            List<ElementoLista> elementos = prepararElementosPorFecha(partidos);
+                            callback.onSuccess(elementos);
                         }).addOnFailureListener(callback::onFailure);
                     } else {
                         callback.onFailure(new Exception("No se encontraron partidos para la jornada " + idJornada));
                     }
                 })
-                .addOnFailureListener(callback::onFailure); // Error en la consulta de partidos
+                .addOnFailureListener(callback::onFailure);
     }
+    private List<ElementoLista> prepararElementosPorFecha(List<Partido> partidos) {
+        Map<String, List<Partido>> mapaPartidos = new TreeMap<>();
 
-    public void cargarJugadores(List<String> idJugadores, Callback<List<Jugador>> callback) {
-        List<Jugador> jugadores = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-        for (String idJugador : idJugadores) {
-            firestore.collection("Jugadores").document(idJugador).get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        Jugador jugador = documentSnapshot.toObject(Jugador.class);
-                        if (jugador != null) {
-                            jugadores.add(jugador);
-
-                            if (jugadores.size() == idJugadores.size()) {
-                                callback.onSuccess(jugadores);
-                            }
-                        }
-                    })
-                    .addOnFailureListener(e -> callback.onFailure(e));
+        for (Partido partido : partidos) {
+            Date fechaCompleta = partido.getHorario().toDate();
+            if (fechaCompleta != null) {
+                String fechaSinHora = sdf.format(fechaCompleta);
+                mapaPartidos.putIfAbsent(fechaSinHora, new ArrayList<>());
+                mapaPartidos.get(fechaSinHora).add(partido);
+            }
         }
+        List<ElementoLista> elementos = new ArrayList<>();
+        SimpleDateFormat fechaMostradaSdf = new SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault());
+
+        for (Map.Entry<String, List<Partido>> entry : mapaPartidos.entrySet()) {
+            Date fecha = null;
+            try {
+                fecha = sdf.parse(entry.getKey());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (fecha != null) {
+                String fechaFormateada = fechaMostradaSdf.format(fecha);
+                elementos.add(new ElementoLista(ElementoLista.TIPO_FECHA, fechaFormateada, null));
+            }
+            for (Partido partido : entry.getValue()) {
+                elementos.add(new ElementoLista(ElementoLista.TIPO_PARTIDO, null, partido));
+            }
+        }
+
+        return elementos;
     }
+
 }

@@ -7,6 +7,7 @@ public class Equipo {
     private String ciudad;
     private String entrenador;
     private Jugador[] Jugadores;
+    private String RutaEscudo;
 
     public Equipo(){}
 
@@ -24,5 +25,7 @@ public class Equipo {
 
     public Jugador[] getJugadores() { return Jugadores; }
     public void setJugadores(Jugador[] jugadores) { Jugadores = jugadores; }
+    public String getRutaEscudo() { return RutaEscudo; }
+    public void setRutaEscudo(String RutaEscudo) { this.RutaEscudo = RutaEscudo; }
 
 }

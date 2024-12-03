@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#2D2D2D"
+    android:background="#4B4B4B"
     android:padding="8dp">
 
     <Spinner
@@ -15,7 +15,7 @@
         android:padding="8dp"
         android:spinnerMode="dropdown"
         android:layout_marginTop="130dp"
-        android:layout_marginBottom="70dp"/>
+        android:layout_marginBottom="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPartidos"

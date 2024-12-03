@@ -1,11 +1,14 @@
 package com.example.golmaster;
-
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,8 +20,10 @@ public class PartidoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final int TIPO_PARTIDO = 1;
 
     private List<ElementoLista> elementos;
+    private Context context; // Para iniciar la nueva actividad
 
-    public PartidoAdapter(List<ElementoLista> elementos) {
+    public PartidoAdapter(Context context, List<ElementoLista> elementos) {
+        this.context = context;
         this.elementos = elementos;
     }
 
@@ -55,7 +60,7 @@ public class PartidoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return elementos.size();
     }
 
-    public static class FechaViewHolder extends RecyclerView.ViewHolder {
+    public class FechaViewHolder extends RecyclerView.ViewHolder {
         TextView tvFecha;
 
         public FechaViewHolder(@NonNull View itemView) {
@@ -68,14 +73,29 @@ public class PartidoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public static class PartidoViewHolder extends RecyclerView.ViewHolder {
-        TextView tvHorario, tvEquipoLocal, tvEquipoVisitante;
+    public class PartidoViewHolder extends RecyclerView.ViewHolder {
+        TextView tvEquipoLocal, tvEquipoVisitante, tvHorario;
+        ImageView ivEscudoLocal, ivEscudoVisitante;
 
         public PartidoViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvHorario = itemView.findViewById(R.id.tvHorario);
             tvEquipoLocal = itemView.findViewById(R.id.tvEquipoLocal);
             tvEquipoVisitante = itemView.findViewById(R.id.tvEquipoVisitante);
+            tvHorario = itemView.findViewById(R.id.tvHorario);
+            ivEscudoLocal = itemView.findViewById(R.id.ivEscudoLocal);
+            ivEscudoVisitante = itemView.findViewById(R.id.ivEscudoVisitante);
+
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    Partido partido = elementos.get(position).getPartido();
+                    if (partido != null) {
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.putExtra("partido", partido);
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
 
         public void bind(Partido partido) {
@@ -89,6 +109,14 @@ public class PartidoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             tvEquipoLocal.setText(partido.getNombreEquipoLocal());
             tvEquipoVisitante.setText(partido.getNombreEquipoVisitante());
+
+            Glide.with(context)
+                    .load("file:///android_asset/escudos/" + partido.getRutaEscudoLocal() + ".png")
+                    .into(ivEscudoLocal);
+
+            Glide.with(context)
+                    .load("file:///android_asset/escudos/" + partido.getRutaEscudoVisitante() + ".png")
+                    .into(ivEscudoVisitante);
         }
     }
 
